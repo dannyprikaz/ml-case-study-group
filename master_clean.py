@@ -38,4 +38,10 @@ def load_churn():
     df['last_trip_date'] = df['last_trip_date'].map(f)
     df['signup_date'] = df['signup_date'].map(f)
 
+    # Convert boolean to binary
+    df['luxury_car_user'] = np.where(df['luxury_car_user'], 1, 0)
+    
+    # Drop target from feature space
+    df = df.drop('last_trip_date', axis=1)
+
     return df
