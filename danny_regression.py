@@ -1,24 +1,25 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.cross_validation import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.grid_search import GridSearchCV
 from master_clean import load_churn
 import pandas as pd
 
 df = load_churn()
 
-y = df.pop('churn').as_matrix()
-X = df.as_matrix()
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+y = df.pop('churn').values
+X = df.values
 
 scale = StandardScaler()
 
-scale.fit(X_train)
-scale.transform(X_train)
-scale.transform(X_test)
+scale.fit_transform(X)
 
-model = LogisticRegression(C=0.01)
+param_grid = {'C': [10, 1, 0.1, 0.01, 0.001, 0.0001]}
 
-model.fit(X_train, y_train)
+gs = GridSearchCV(LogisticRegression(), param_grid)
 
-model.predict(X_test)
+gs.fit(X, y)
+
+print gs.best_params_
+
+# C = 0.01
